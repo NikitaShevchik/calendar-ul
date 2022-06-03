@@ -13,7 +13,6 @@ const allDaysCalendar = document.querySelector(".calendar__days");
 var todayDate = (new Date()).toISOString().slice(8, 10);
 var todayMounth = (new Date()).toISOString().slice(5, 7);
 var todayYear = Number((new Date()).toISOString().slice(0, 4));
-console.log(typeof (todayYear))
 /*------------Вывод для удобства в консоль-------------*/
 console.log(todayDate);
 console.log(todayMounth);
