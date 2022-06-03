@@ -1,35 +1,33 @@
 "use strict"
-
+/*------------Получаем теги куда записывать год и месяц-------------*/
 const month = document.querySelector(".calendar__month");
 const year = document.querySelector(".calendar__year");
-
+/*------------Получаем в ДОМ стрелочки------------*/
 const arrowYearLeft = document.querySelector(".year__left");
 const arrowYearRight = document.querySelector(".year__right");
 const arrowMonthLeft = document.querySelector(".month__left");
 const arrowMonthRight = document.querySelector(".month__right");
-
+/*------------ДОМ всех дат(родителя)-------------*/
 const allDaysCalendar = document.querySelector(".calendar__days");
-
+/*------------Получаем сегодняшние: число, месяц, год-------------*/
 var todayDate = (new Date()).toISOString().slice(8, 10);
 var todayMounth = (new Date()).toISOString().slice(5, 7);
 var todayYear = (new Date()).toISOString().slice(0, 4);
-
+/*------------Вывод для удобства в консоль-------------*/
 console.log(todayDate);
 console.log(todayMounth);
 console.log(todayYear);
-
+/*------------Создаем массив из месяцев на русском-------------*/
 var monthRussian = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентрябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
-
+/*------------Выводим текущий год-------------*/
 function whatYearToday() {
     year.innerHTML = todayYear;
 }
+/*------------Выводим текущий месяц-------------*/
 function whatMonthToday() {
-    if (todayMounth < 10) {
-        month.innerHTML = monthRussian[Number(todayMounth[1]) - 1];
-    } else {
-        month.innerHTML = monthRussian[Number(todayMounth) - 1];
-    }
+    month.innerHTML = monthRussian[Number(todayMounth) - 1];
 }
+/*------------Какой сейчас день (красит его красным)-------------*/
 function whatDayToday() {
     var monthNow; // месяц сейчас записаный
     monthNow = monthRussian.indexOf(month.innerHTML); // его индекс (реал номер - 1)
@@ -41,25 +39,23 @@ function whatDayToday() {
         today.classList.remove("_today");
     }
 };
-
+/*------------Запускаем эти функции. Функция красного дня нам еще пригодится ниже.-------------*/
 whatYearToday();
 whatMonthToday();
 whatDayToday();
-
+/*------------Предыдущий год-------------*/
 arrowYearLeft.addEventListener('click', function () {
     var yearNew = year.innerHTML;
     year.innerHTML = yearNew - 1;
-
     whatDayToday(); //окрашиваем ли сегодняшнее число?
 });
-
+/*------------Следующий год-------------*/
 arrowYearRight.addEventListener('click', function () {
     var yearNew = year.innerHTML;
     year.innerHTML = Number(yearNew) + 1;
-
     whatDayToday(); //окрашиваем ли сегодняшнее число?
 });
-
+/*------------Предыдущий месяц-------------*/
 arrowMonthLeft.addEventListener('click', function () {
     var monthNow;
     monthNow = monthRussian.indexOf(month.innerHTML);
@@ -69,7 +65,6 @@ arrowMonthLeft.addEventListener('click', function () {
         month.innerHTML = monthRussian[monthNow];
         var yearNew = year.innerHTML;
         year.innerHTML = yearNew - 1;
-
         howMuchDays(); //сколько дней?
         whatDayToday(); //окрашиваем ли сегодняшнее число?
     } else {
@@ -78,7 +73,7 @@ arrowMonthLeft.addEventListener('click', function () {
         whatDayToday(); //окрашиваем ли сегодняшнее число?
     }
 });
-
+/*------------Следующий месяц-------------*/
 arrowMonthRight.addEventListener('click', function () {
     var monthNow;
     monthNow = monthRussian.indexOf(month.innerHTML);
@@ -96,8 +91,7 @@ arrowMonthRight.addEventListener('click', function () {
         whatDayToday(); //окрашиваем ли сегодняшнее число?
     }
 });
-
-
+/*------------3 переменные для вывода. 30, 31 и 28 дней в месяце-------------*/
 var thirtyDays = allDaysCalendar.innerHTML;
 var thirtyOneDays = allDaysCalendar.innerHTML + `<li class="calendar__day" id="31">31</li>`;
 var twentyEight = `<li class="calendar__day" id="01">1</li>
@@ -128,7 +122,7 @@ var twentyEight = `<li class="calendar__day" id="01">1</li>
 <li class="calendar__day" id="26">26</li>
 <li class="calendar__day" id="27">27</li>
 <li class="calendar__day" id="28">28</li>`;
-
+/*------------Функция которая должна понять какой сейчас месяц и вывести нужное количество дней-------------*/
 function howMuchDays() {
     var monthSelect = monthRussian.indexOf(month.innerHTML);
     if (monthSelect == 1) {
