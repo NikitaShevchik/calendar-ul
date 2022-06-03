@@ -12,7 +12,8 @@ const allDaysCalendar = document.querySelector(".calendar__days");
 /*------------Получаем сегодняшние: число, месяц, год-------------*/
 var todayDate = (new Date()).toISOString().slice(8, 10);
 var todayMounth = (new Date()).toISOString().slice(5, 7);
-var todayYear = (new Date()).toISOString().slice(0, 4);
+var todayYear = Number((new Date()).toISOString().slice(0, 4));
+console.log(typeof (todayYear))
 /*------------Вывод для удобства в консоль-------------*/
 console.log(todayDate);
 console.log(todayMounth);
@@ -29,9 +30,8 @@ function whatMonthToday() {
 }
 /*------------Какой сейчас день (красит его красным)-------------*/
 function whatDayToday() {
-    var monthNow; // месяц сейчас записаный
-    monthNow = monthRussian.indexOf(month.innerHTML); // его индекс (реал номер - 1)
-    if (Number(todayMounth) - 1 == monthNow && todayYear == year.innerHTML) {
+    var monthNow = monthRussian.indexOf(month.innerHTML); // индекс сейчас записанного месяца (реал номер - 1)
+    if (Number(todayMounth) - 1 == monthNow && Number(year.innerHTML) == todayYear) {
         var today = document.getElementById(todayDate);
         today.classList.add("_today");
     } else {
@@ -42,18 +42,20 @@ function whatDayToday() {
 /*------------Запускаем эти функции. Функция красного дня нам еще пригодится ниже.-------------*/
 whatYearToday();
 whatMonthToday();
-whatDayToday();
+setTimeout(whatDayToday, 10);
 /*------------Предыдущий год-------------*/
 arrowYearLeft.addEventListener('click', function () {
     var yearNew = year.innerHTML;
     year.innerHTML = yearNew - 1;
-    whatDayToday(); //окрашиваем ли сегодняшнее число?
+    setTimeout(whatDayToday, 10); //окрашиваем ли сегодняшнее число?
+    howMuchDays(); // если там февраль, определит високосный год
 });
 /*------------Следующий год-------------*/
 arrowYearRight.addEventListener('click', function () {
     var yearNew = year.innerHTML;
     year.innerHTML = Number(yearNew) + 1;
-    whatDayToday(); //окрашиваем ли сегодняшнее число?
+    setTimeout(whatDayToday, 10); //окрашиваем ли сегодняшнее число?
+    howMuchDays(); // если там февраль, определит високосный год
 });
 /*------------Предыдущий месяц-------------*/
 arrowMonthLeft.addEventListener('click', function () {
@@ -66,11 +68,11 @@ arrowMonthLeft.addEventListener('click', function () {
         var yearNew = year.innerHTML;
         year.innerHTML = yearNew - 1;
         howMuchDays(); //сколько дней?
-        whatDayToday(); //окрашиваем ли сегодняшнее число?
+        setTimeout(whatDayToday, 10); //окрашиваем ли сегодняшнее число?
     } else {
         month.innerHTML = monthRussian[monthNow - 1];
         howMuchDays(); //сколько дней?
-        whatDayToday(); //окрашиваем ли сегодняшнее число?
+        setTimeout(whatDayToday, 10); //окрашиваем ли сегодняшнее число?
     }
 });
 /*------------Следующий месяц-------------*/
@@ -126,11 +128,14 @@ var twentyEight = `<li class="calendar__day" id="01">1</li>
 function howMuchDays() {
     var monthSelect = monthRussian.indexOf(month.innerHTML);
     if (monthSelect == 1) {
-        allDaysCalendar.innerHTML = twentyEight;
+        if (Number(year.innerHTML) % 4 == 0) { // год високосный - 29 дней
+            allDaysCalendar.innerHTML = twentyEight + `<li class="calendar__day" id="29">29</li>`;
+        } else { // год не високосный - 28 дней
+            allDaysCalendar.innerHTML = twentyEight;
+        }
     } else if (monthSelect == 0 || monthSelect == 2 || monthSelect == 4 || monthSelect == 6 || monthSelect == 7 || monthSelect == 9 || monthSelect == 11) {
         allDaysCalendar.innerHTML = thirtyOneDays;
     } else {
         allDaysCalendar.innerHTML = thirtyDays;
     }
-    console.log(monthSelect);
 }
